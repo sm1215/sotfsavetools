@@ -1,5 +1,6 @@
 mod game_state;
 mod save_data;
+mod weather_system;
 
 use std::{
     fs::File,
@@ -9,6 +10,7 @@ use std::{
 
 pub use game_state::*;
 pub use save_data::*;
+pub use weather_system::*;
 
 use serde::{Deserialize, Serialize};
 
@@ -23,6 +25,7 @@ pub struct GenericData<T> {
 pub struct Save {
     pub game_state: GenericData<GameState>,
     pub save_data: GenericData<SaveData>,
+    pub weather_system: GenericData<WeatherSystem>,
 }
 
 macro_rules! get_type_id_methods {
@@ -51,10 +54,12 @@ impl Save {
 
         load_file!(game_state: GameState => "GameStateSaveData.json");
         load_file!(save_data: SaveData => "SaveData.json");
+        load_file!(weather_system: WeatherSystem => "WeatherSystemSaveData.json");
 
         Ok(Self {
             game_state,
             save_data,
+            weather_system,
         })
     }
 
@@ -69,6 +74,9 @@ impl Save {
 
         write_file!(game_state => "GameStateSaveData.json");
         write_file!(save_data => "SaveData.json");
+
+        // TODO: don't write this file if user hasn't changed weather
+        write_file!(weather_system => "WeatherSystemSaveData.json");
 
         Ok(())
     }

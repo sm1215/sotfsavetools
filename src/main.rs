@@ -235,6 +235,11 @@ impl eframe::App for SotfApp {
                         tools.virginia.render(self.save.as_mut().unwrap(), ui);
                         ui.end_row();
 
+                        // ToolSeason
+                        ui.label("Season");
+                        tools.season.render(self.save.as_mut().unwrap(), ui);
+                        ui.end_row();
+
                         // Save changes
                         ui.label("Save");
                         if ui.button("Save changes").clicked() {

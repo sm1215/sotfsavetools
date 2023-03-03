@@ -1,7 +1,8 @@
 mod kelvin;
 mod virginia;
+mod season;
 
-use self::{kelvin::ToolKelvin, virginia::ToolVirginia};
+use self::{kelvin::ToolKelvin, virginia::ToolVirginia, season::ToolSeason};
 use crate::save::Save;
 use std::fmt::Debug;
 
@@ -30,4 +31,5 @@ macro_rules! save_tools {
 save_tools!(
     kelvin => ToolKelvin,
     virginia => ToolVirginia,
+    season => ToolSeason,
 );
