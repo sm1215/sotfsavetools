@@ -49,9 +49,6 @@ impl ToolSeason {
     pub fn fix_season(&mut self, save: &mut Save) {
         // set season settings back to normal defaults
         save.weather_system.data.weather_system.current_season = 0;
-
-        // TODO: finish implementing the rest of the changes needed for the fix
-        // save.weather_system.starting_day_offset = 5.0;
-        // save.game_setup.settings.string_value = "Normal";
+        save.weather_system.data.weather_system.starting_day_offset = 5.0;
     }
 }

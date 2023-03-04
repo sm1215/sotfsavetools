@@ -19,27 +19,27 @@ pub struct WeatherSystem {
 pub struct WeatherSystemInner {
     pub version: String,
 
-    // #[serde(rename = "_cloudState")]
-    // pub cloud_state: i32,
+    #[serde(rename = "_cloudState")]
+    pub cloud_state: i32,
 
-    // #[serde(rename = "_")]
-    // pub current_rain_type: i32,
+    #[serde(rename = "_currentRainType")]
+    pub current_rain_type: i32,
     #[serde(rename = "_currentSeason")]
     pub current_season: i32,
     
-    // #[serde(rename = "_")]
-    // pub starting_day_offset: f32,
-    // #[serde(rename = "_")]
-    // pub wetness_velocity: f32,
-    // #[serde(rename = "_")]
-    // pub wetness_current: f32,
-    // #[serde(rename = "_")]
-    // pub wetness_target: f32,
+    #[serde(rename = "_startingDayOffset")]
+    pub starting_day_offset: f32,
+    #[serde(rename = "_wetnessVelocity")]
+    pub wetness_velocity: f32,
+    #[serde(rename = "_wetnessCurrent")]
+    pub wetness_current: f32,
+    #[serde(rename = "_wetnessTarget")]
+    pub wetness_target: f32,
 
-    // #[serde(rename = "_isRaining")]
-    // pub is_raining: bool,
-    // #[serde(rename = "_")]
-    // pub rain_blocked: bool,
+    #[serde(rename = "_isRaining")]
+    pub is_raining: bool,
+    #[serde(rename = "_rainBlocked")]
+    pub rain_blocked: bool,
 
     #[serde(flatten)]
     other: HashMap<String, Value>,
