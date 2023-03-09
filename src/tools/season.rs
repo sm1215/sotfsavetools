@@ -72,8 +72,49 @@ impl ToolSeason {
             1 => "Summer".to_string(),
             2 => "Fall".to_string(),
             3 => "Winter".to_string(),
-            _ => "Unknown Season".to_string(),
+            _ => panic!("Unknown current season name."),
         }
+    }
+
+    // evaluate what the host's current season should be after changing offset
+    pub fn determine_new_season(&mut self, save: &Save) -> i32 {
+        let offset = save.weather_system.data.weather_system.starting_day_offset;
+        let game_days = save.game_state.data.game_state.game_days;
+
+        let settings: Vec<GameSettingsInner> = save.game_setup.data.game_setup.settings.clone();
+        
+        let starting_season = settings
+            .into_iter()
+            .filter(|entry| entry.name == "GameSetting.Environment.StartingSeason")
+            .collect::<Vec<GameSettingsInner>>()[0]
+            .string_value
+            .clone();
+ 
+        let starting_season_int = match starting_season.as_str() {
+            "Spring" => 0,
+            "Summer" => 1,
+            "Fall" => 2,
+            "Winter" => 3,
+            _ => panic!("Unknown starting season"),
+        };
+
+        let number_of_seasons = 4;
+
+        // figure out how far we've progressed through the current season out of all years passed
+        let seasonal_progress = game_days as f32 / (number_of_seasons as f32 * offset);
+
+        // disregard how many years have passed, only interested in progress through the current year
+        let mantissa = seasonal_progress - seasonal_progress.floor();
+
+        // map progress to the integers used for each season
+        // i.e. spring = 0, summer = 1, etc...
+        let mantissa_times_seasons = mantissa * number_of_seasons as f32;
+
+        // adjust for the starting season
+        let season = mantissa_times_seasons.floor() as i32 + starting_season_int;
+        let actual_season = season % number_of_seasons;
+
+        actual_season
     }
 
     pub fn fetch_game_uid(&mut self, save: &Save) -> GameSettingsInner {
@@ -88,8 +129,8 @@ impl ToolSeason {
 
     pub fn fix_season(&mut self, save: &mut Save) {
         // set season settings back to normal defaults
-        save.weather_system.data.weather_system.current_season = 1;
         save.weather_system.data.weather_system.starting_day_offset = 5.0;
+        save.weather_system.data.weather_system.current_season = self.determine_new_season(save);
 
         // set game settings to default normal config
         let normal_mode = GameSettingsInner::get_normal_mode();
